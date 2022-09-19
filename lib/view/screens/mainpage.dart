@@ -1,43 +1,45 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:full_totars/core/services/services.dart';
+
 import 'package:full_totars/view/screens/login.dart';
 
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
+
 
 import '../../core/functions/mainPageFunctions.dart';
 
 import '../../data/datasource/static/mainPageData.dart';
-import '../../data/model/post.dart';
+
 
 class mainPage extends StatefulWidget {
   const mainPage({Key? key}) : super(key: key);
 
   @override
   State<mainPage> createState() => _mainPageState();
+
 }
 
 class _mainPageState extends State<mainPage> {
-  List<Post>? posts;
-  var isLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    //fetch data from API
-    getData();
-  }
-
-  getData() async {
-    posts = await RemoteService().getPosts();
-    if (posts != null) {
+  Future getData() async{
+    var url=Uri.parse("http://localhost:4000");
+    http.Response response= await  http.get(url);
+    String body =response.body;
+    List<dynamic> list1=json.decode(body);
+    print(body);
+    for (int i=0; i<list1.length; i++){
       setState(() {
-        isLoaded = true;
+
       });
     }
   }
-
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +99,7 @@ class _mainPageState extends State<mainPage> {
                       Icons.login_sharp,
                       color: Colors.teal,
                     ),
+
                     Text(
                       "Register with tooters to earn points for FREE FOOD",
                       style: TextStyle(color: Colors.black87, fontSize: 14),
@@ -105,56 +108,56 @@ class _mainPageState extends State<mainPage> {
                 ),
               ),
               Expanded(child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                children: [
-                  Container(
-                    height: 200,
-                    child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    Container(
+                      height: 200,
+                      child: ListView.builder(
 //padding: EdgeInsets.only(left: 10,),
 
-                        scrollDirection: Axis.horizontal,
-                        itemCount: addpics.length,
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                              child: Container(
-                                width: MediaQuery.of(context).size.width -30 ,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: addpics.length,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width -30 ,
 
-                                //     width: MediaQuery.of(context).size.width-50,
+                                  //     width: MediaQuery.of(context).size.width-50,
 
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    image: DecorationImage(
-                                      image: AssetImage(addpics[index]["path"]),
-                                      fit: BoxFit.fill,
-                                    )),
-                              ));
-                        }),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.width/1.55,
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      crossAxisCount: 3,
-
-                      children: [
-                        category("Food", "imgs/cat_food.png"),
-                        category("Fresh", "imgs/cat_fresh.png"),
-                        category("Shops", "imgs/Cat_shop.png"),
-                        category("Butler", "imgs/cat_butler.png"),
-                        category("Rewards", "imgs/cat_gift.png"),
-                        category("Market", "imgs/cat_market.png"),
-                      ],
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      image: DecorationImage(
+                                        image: AssetImage(addpics[index]["path"]),
+                                        fit: BoxFit.fill,
+                                      )),
+                                ));
+                          }),
                     ),
-                  ),
-                  space(),
-                  offers("New on toters", "check out our latest partners"),
-                  space(),
-                  offers("Happy Hour", "get happy with 50% off"),
-                  space(),
-                  foodOptions(),
-                   resturants(),
+                    Container(
+                      height: MediaQuery.of(context).size.width/1.55,
+                      child: GridView.count(
+                        physics: NeverScrollableScrollPhysics(),
+                        crossAxisCount: 3,
+
+                        children: [
+                          category("Food", "imgs/cat_food.png"),
+                          category("Fresh", "imgs/cat_fresh.png"),
+                          category("Shops", "imgs/Cat_shop.png"),
+                          category("Butler", "imgs/cat_butler.png"),
+                          category("Rewards", "imgs/cat_gift.png"),
+                          category("Market", "imgs/cat_market.png"),
+                        ],
+                      ),
+                    ),
+                    space(),
+                    offers("New on toters", "check out our latest partners"),
+                    space(),
+                    offers("Happy Hour", "get happy with 50% off"),
+                    space(),
+                    foodOptions(),
+                    resturants(),
 
 
 
@@ -170,3 +173,29 @@ class _mainPageState extends State<mainPage> {
     );
   }
 }
+
+
+
+//
+// class _mainPageState extends State<mainPage> {
+//   List<Post>? posts;
+//   var isLoaded = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     //fetch data from API
+//     getData();
+//   }
+//
+//   getData() async {
+//     posts = await RemoteService().getPosts();
+//     if (posts != null) {
+//       setState(() {
+//         isLoaded = true;
+//       });
+//     }
+//   }
+
+
